@@ -8,7 +8,7 @@ This is a simple api for fetching data from MongoDB on MongoDB Atlas to your fro
    
    3.1.   Locally: using Maven command: ```mvn spring-boot:run``` and go to "localhost:8080/"
    
-   3.2.   In Docker using dockerfile provided:
+   3.2.   In Docker using the Dockerfile provided:
      * build the image with docker command: ```docker build -t my-app:latest .```
      * run the image in a docker container and map the port to your specific port: ```docker run -d -p {your-port}:8080 --name my-spring-app my-app:latest```
      * go to "localhost:{your-port}/"
