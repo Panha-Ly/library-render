@@ -16,4 +16,12 @@ public class BookService {
     public List<Book> findAllBooks() {
         return bookRepository.findAll();
     }
+
+    public Book findBookById(String id) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if(book == null) {
+            throw new RuntimeException("Book not found");
+        }
+        return book;
+    }
 }
