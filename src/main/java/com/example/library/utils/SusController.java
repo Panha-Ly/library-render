@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.utils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

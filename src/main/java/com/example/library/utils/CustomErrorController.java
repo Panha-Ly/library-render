@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.utils;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;

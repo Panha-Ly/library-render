@@ -24,5 +24,5 @@ public class Book {
     private String publicationDate;
     private String genre;
     private String description;
-    private String coverImage;
+    private String posterImage;
 }

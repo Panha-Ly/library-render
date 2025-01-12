@@ -2,6 +2,7 @@ package com.example.library.book;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,4 +25,9 @@ public class BookService {
         }
         return book;
     }
+
+    public ResponseEntity<Book> saveBook(Book book) {
+        return ResponseEntity.ok(bookRepository.save(book));
+    }
+
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- TODO: MOve thid to react later -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create</title>
+</head>
+<body>
+    <form th:action="@{/v1/books/create}" method="post" enctype="multipart/form-data">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id">
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        
+        <label for="posterImage">Poster Image:</label>
+        <input type="file" id="posterImage" name="posterImage">
+        
+        <button type="submit">Submit</button>
+    </form>
+    
+</body>
+</html>
+
