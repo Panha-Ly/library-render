@@ -1,9 +1,12 @@
 package com.example.library.book;
 
+import java.net.URI;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class BookService {
@@ -14,20 +17,30 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> findAllBooks() {
-        return bookRepository.findAll();
+
+    public ResponseEntity<List<Book>> findAllBooks() {
+        return ResponseEntity.ok(bookRepository.findAll());
     }
 
-    public Book findBookById(String id) {
+    public ResponseEntity<Book> findBookById(String id) {
         Book book = bookRepository.findById(id).orElse(null);
         if(book == null) {
-            throw new RuntimeException("Book not found");
+            return new ResponseEntity<Book>(HttpStatus.NOT_FOUND);
         }
-        return book;
+        return new ResponseEntity<Book>(book, HttpStatus.OK);
     }
 
+    //TODO: add create update delete of book service
     public ResponseEntity<Book> saveBook(Book book) {
-        return ResponseEntity.ok(bookRepository.save(book));
+        Book savedBook = bookRepository.save(book);
+
+        // Build the URI for the created resource
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .replacePath("v1/books/{id}")
+            .buildAndExpand(savedBook.getId())
+            .toUri();
+
+        return ResponseEntity.created(location).body(savedBook);
     }
 
 }

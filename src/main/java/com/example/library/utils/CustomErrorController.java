@@ -28,7 +28,7 @@ public class CustomErrorController implements ErrorController {
                         .append("<p>The requested resource could not be found.</p>");
         } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             htmlResponse.append("<h1>500 - Internal Server Error</h1>")
-                        .append("<p>There was an internal server error.</p>");
+                        .append("<p>There was an internal server error. Could be a resource not found.</p>");
         } else {
             htmlResponse.append("<h1>400 - Bad Request</h1>")
                         .append("<p>The request could not be understood or was missing required parameters.</p>");

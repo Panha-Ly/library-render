@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Document(collection = "books")
 @Data
+@JsonIgnoreType
 @AllArgsConstructor
 @NoArgsConstructor
 public class Book {
@@ -25,4 +29,17 @@ public class Book {
     private String genre;
     private String description;
     private String posterImage;
+
+
+
+    public Book(String id, String title, String author, String publicationDate, String genre, String description, String posterImage) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.publicationDate = publicationDate;
+        this.genre = genre;
+        this.description = description;
+        this.posterImage = posterImage;
+    }
+
 }
