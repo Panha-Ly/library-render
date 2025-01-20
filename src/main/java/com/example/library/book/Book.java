@@ -28,18 +28,18 @@ public class Book {
     private String publicationDate;
     private String genre;
     private String description;
-    private String posterImage;
+    private String posterImageName;
 
 
 
-    public Book(String id, String title, String author, String publicationDate, String genre, String description, String posterImage) {
+    public Book(String id, String title, String author, String publicationDate, String genre, String description, String posterImageName) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.publicationDate = publicationDate;
         this.genre = genre;
         this.description = description;
-        this.posterImage = posterImage;
+        this.posterImageName = posterImageName;
     }
 
 }
