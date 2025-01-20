@@ -1,7 +1,9 @@
 # library-render
+
 This is a simple api for fetching data from MongoDB on MongoDB Atlas to your front-end appplication using Spring Boot.
 
 # How to run this project locally
+
 1. pull this project to your PC.
 2. create a .env file to store your MongoDB credentials using the .env.example file provided. (you need a database hosted on MongoDB Altas)
 3. run this project locally or in a docker container
