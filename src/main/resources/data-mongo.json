@@ -6,7 +6,9 @@
         "publicationDate": "26 June 1997",
         "genre": "Fantasy",
         "description": "Turning the envelope over, his hand trembling, Harry saw a purple wax seal bearing a coat of arms; a lion, an eagle, a badger and a snake surrounding a large letter 'H'.\nHARRY POTTER has never even heard of Hogwarts when the LETTERS start dropping on the doormat at number four, Privet Drive. Addressed in GREEN INK on yellowish parchment with a PURPLE SEAL, they are swiftly confiscated by his GRISLY aunt and uncle. Then, on Harry's eleventh birthday, a great beetle-eyed giant of a man called RUBEUS HAGRID bursts in with some ASTONISHING news: Harry Potter is a wizard, and he has a place at Hogwarts School of Witchcraft and Wizardry. An incredible adventure is about to begin!",
-        "posterImageName": "img1_hp_1.png"
+        "posterImageName": null,
+        "posterImageType": null,
+        "posterImageBytes": null
     },
     {
         "id": "2",
@@ -144,3 +146,4 @@
         "posterImageName": "img16_heir_of_fire.png"
     }
 ]
+
