@@ -1,6 +1,5 @@
 package com.example.library.book;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -40,6 +39,131 @@ public class BookService {
         }
         return new ResponseEntity<Book>(book, HttpStatus.OK);
     }
+    public ResponseEntity<Book> saveBook(Book book, MultipartFile posterImageFile) {
+        // Generates a new image name
+        Random random = new Random();
+        int randomNumber = random.nextInt(9000000) + 1000000;
+        String fileName = "img" + book.getId() + "_" + String.format("%07d", randomNumber);
+        String fileType = posterImageFile.getContentType();
+
+        // Check if file type is null
+        if (fileType == null) {
+            throw new RuntimeException("No file submited");
+        }
+        if (fileType.equals("image/jpeg")) {
+            fileName += ".jpg";
+        } else if (fileType.equals("image/png")) {
+            fileName += ".png";
+        } else {
+            // Handle other file types or throw an exception
+            throw new RuntimeException("Unsupported file type: " + fileType);
+        }
+
+        // Set the book poster image details
+        book.setPosterImageType(fileType);
+        book.setPosterImageName(fileName);
+        book.setPosterImageUrl("v1/books/" + book.getId() + "/poster");
+        try {
+            book.setPosterImageBytes(posterImageFile.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<Book>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        // Save the book
+        Book savedBook = bookRepository.save(book);
+
+        // Build the URI for the created resource
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .replacePath("v1/books/{id}")
+                .buildAndExpand(savedBook.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(savedBook);
+    }
+
+    public ResponseEntity<Book> updateBookById(String id, Book entity, MultipartFile posterImageFile) {
+        Book existingBook = bookRepository.findById(id).orElse(null);
+        if (existingBook == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // Update the book details (except for the poster image)
+        existingBook.setTitle(entity.getTitle());
+        existingBook.setAuthor(entity.getAuthor());
+        existingBook.setPublicationDate(entity.getPublicationDate());
+        existingBook.setGenre(entity.getGenre());
+        existingBook.setDescription(entity.getDescription());
+
+        // Check if a new poster image is provided
+        if (posterImageFile != null && !posterImageFile.isEmpty()) {
+            // Generated a new image name
+            Random random = new Random();
+            int randomNumber = random.nextInt(9000000) + 1000000;
+            String fileName = "img" + entity.getId() + "_" + String.format("%07d", randomNumber);
+            String fileType = posterImageFile.getContentType();
+
+            // check if file type is null
+            if (fileType == null) {
+                throw new RuntimeException("No file submited");
+            }
+            if (fileType.equals("image/jpeg")) {
+                fileName += ".jpg";
+            } else if (fileType.equals("image/png")) {
+                fileName += ".png";
+            } else {
+                // Handle other file types or throw an exception
+                throw new RuntimeException("Unsupported file type: " + fileType);
+            }
+
+            // Set the new book poster image details
+            existingBook.setPosterImageType(fileType);
+            existingBook.setPosterImageName(fileName);
+            existingBook.setPosterImageUrl("v1/books/" + entity.getId() + "/poster");
+            try {
+                existingBook.setPosterImageBytes(posterImageFile.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new ResponseEntity<Book>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        return ResponseEntity.ok().body(bookRepository.save(existingBook));
+    }
+
+        
+    public ResponseEntity<Book> deleteBookById (String id) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book == null) {
+            return new ResponseEntity<Book>(HttpStatus.NOT_FOUND);
+        }
+        bookRepository.delete(book);
+        return new ResponseEntity<Book>(HttpStatus.NO_CONTENT);
+    }
+
+    public ResponseEntity<byte[]> findPosterById(String id) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (book.getPosterImageBytes() == null || book.getPosterImageName() == null || book.getPosterImageType() == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        }
+        
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(book.getPosterImageType())) 
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + book.getPosterImageName() + "\"")
+                .body(book.getPosterImageBytes()); 
+    }
+
+
+
+
+
+
+    // Methods for 
+    // 1. Saving books to the database and its poster image to the local file system. Not storing them together.
+    // 2. Fetching book poster image from the local file system.
+    // See the Contributing and Improvements and More section of the README.md file for reasons why i didn't use this.
 
     /**
      * Saves a book and its image to the local file system. The image is saved to the
@@ -144,115 +268,5 @@ public class BookService {
         }
     }
 
-    public ResponseEntity<Book> saveBook(Book book, MultipartFile posterImageFile) {
-        // New generated image name
-        Random random = new Random();
-        int randomNumber = random.nextInt(9000000) + 1000000;
-        String fileName = "img" + book.getId() + "_" + String.format("%07d", randomNumber);
-        String fileType = posterImageFile.getContentType();
-
-        // check if file type is null
-        if (fileType == null) {
-            throw new RuntimeException("No file submited");
-        }
-        if (fileType.equals("image/jpeg")) {
-            fileName += ".jpg";
-        } else if (fileType.equals("image/png")) {
-            fileName += ".png";
-        } else {
-            // Handle other file types or throw an exception
-            throw new RuntimeException("Unsupported file type: " + fileType);
-        }
-
-        book.setPosterImageType(fileType);
-        book.setPosterImageName(fileName);
-        book.setPosterImageUrl("v1/books/" + book.getId() + "/poster");
-        try {
-            book.setPosterImageBytes(posterImageFile.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity<Book>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        Book savedBook = bookRepository.save(book);
-
-        // Build the URI for the created resource
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .replacePath("v1/books/{id}")
-                .buildAndExpand(savedBook.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(savedBook);
-    }
-
-    public ResponseEntity<Book> updateBookById(String id, Book entity, MultipartFile posterImageFile) {
-        Book existingBook = bookRepository.findById(id).orElse(null);
-        if (existingBook == null) {
-            return ResponseEntity.notFound().build();
-        }
-        // Update the book details
-        existingBook.setTitle(entity.getTitle());
-        existingBook.setAuthor(entity.getAuthor());
-        existingBook.setPublicationDate(entity.getPublicationDate());
-        existingBook.setGenre(entity.getGenre());
-        existingBook.setDescription(entity.getDescription());
-
-        if (posterImageFile != null && !posterImageFile.isEmpty()) {
-            // New generated image name
-            Random random = new Random();
-            int randomNumber = random.nextInt(9000000) + 1000000;
-            String fileName = "img" + entity.getId() + "_" + String.format("%07d", randomNumber);
-            String fileType = posterImageFile.getContentType();
-
-            // check if file type is null
-            if (fileType == null) {
-                throw new RuntimeException("No file submited");
-            }
-            if (fileType.equals("image/jpeg")) {
-                fileName += ".jpg";
-            } else if (fileType.equals("image/png")) {
-                fileName += ".png";
-            } else {
-                // Handle other file types or throw an exception
-                throw new RuntimeException("Unsupported file type: " + fileType);
-            }
-
-            existingBook.setPosterImageType(fileType);
-            existingBook.setPosterImageName(fileName);
-            existingBook.setPosterImageUrl("v1/books/" + entity.getId() + "/poster");
-            try {
-                existingBook.setPosterImageBytes(posterImageFile.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new ResponseEntity<Book>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return ResponseEntity.ok().body(bookRepository.save(existingBook));
-    }
-
-        
-    public ResponseEntity<Book> deleteBookById (String id) {
-        Book book = bookRepository.findById(id).orElse(null);
-        if (book == null) {
-            return new ResponseEntity<Book>(HttpStatus.NOT_FOUND);
-        }
-        bookRepository.delete(book);
-        return new ResponseEntity<Book>(HttpStatus.NO_CONTENT);
-    }
-
-    public ResponseEntity<byte[]> findPosterById(String id) {
-        Book book = bookRepository.findById(id).orElse(null);
-        if (book == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        if (book.getPosterImageBytes() == null || book.getPosterImageName() == null || book.getPosterImageType() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
-        }
-        
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(book.getPosterImageType())) 
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + book.getPosterImageName() + "\"")
-                .body(book.getPosterImageBytes()); 
-    }
 
 }

@@ -5,7 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +33,7 @@ public class BookController {
     public ResponseEntity<Book> findBookById(@PathVariable String id) {
         return bookService.findBookById(id);
     }
-
-    // TODO: add create update delete of book
+    
     @PostMapping({ "/create", "/create/" })
     public ResponseEntity<Book> saveBook(
             @RequestParam("id") String id,
@@ -61,6 +59,7 @@ public class BookController {
         @RequestParam("description") String description,
         @RequestParam(value = "posterImageFile", required = false) MultipartFile posterImageFile) {
         
+        // create book object without poster info for now, will add it in the service
         Book entity = new Book(id, title, author, publicationDate, genre, description, null, null, null, null);
         return bookService.updateBookById(id, entity, posterImageFile);
     }
