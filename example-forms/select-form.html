@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Buttons</title>
+</head>
+<body>
+    <h1>Select buttons</h1>
+    <br>
+    <button id="btn">Fetch All Data</button>
+    <button id="btnSingleData">Fetch Single Data</button>
+    <button id="btnSinglePoster">Fetch Single Poster</button>
+    <p id="text">Text</p>
+    <img src="" id="img" alt="Image">
+
+<script>
+
+    // Your base URL
+    const baseUrl = 'http://localhost:8080/';
+
+    // Buttons
+    const btn = document.getElementById('btn');
+    const btnSingleData = document.getElementById('btnSingleData');
+    const btnSinglePoster = document.getElementById('btnSinglePoster');
+
+    // Text and Image
+    const textElement = document.getElementById('text');
+    const imgElement = document.getElementById('img');
+
+
+    btn.addEventListener('click', (event) => {
+        fetchBookData();
+        console.log('button clicked');
+    });
+
+    btnSingleData.addEventListener('click', (event) => {
+        fetchSingleData();
+        console.log('button single data clicked');
+    });
+
+    btnSinglePoster.addEventListener('click', (event) => {
+        fetchBookPosterImage();
+        console.log('button single poster clicked');
+    });
+
+    async function fetchBookData() {
+        textElement.innerHTML = '';
+        imgElement.setAttribute('src', '');
+        const response = await fetch(baseUrl + 'v1/books');
+
+        console.log(response);
+        const data = await response.json();
+
+        console.log(data);
+
+        textElement.innerHTML = data.map(item => `<p>${item.title}</p>`).join('');
+
+    }
+
+    async function fetchSingleData() {
+        textElement.innerHTML = '';
+        imgElement.setAttribute('src', '');
+
+        const singleResponse = await fetch(baseUrl + 'v1/books/10');
+        if (!singleResponse.ok) { 
+            console.error('Image not found'); 
+            return; 
+        } 
+        console.log(singleResponse);
+        const singleData = await singleResponse.json(); 
+        console.log(singleData);
+
+        textElement.innerHTML = `<p>${singleData.title}</p>`;
+
+        // const imageURL = URL.createObjectURL(imageBlob);
+        img.setAttribute('src', baseUrl + singleData.posterImageUrl);
+        //console.log(imageURL);
+    }
+
+    async function fetchBookPosterImage() {
+        textElement.innerHTML = '';
+        imgElement.setAttribute('src', '');
+       
+        const response = await fetch(baseUrl + 'v1/books/10/poster');
+
+        if (!response.ok) {
+            console.error('Failed to fetch image');
+            return;
+        }
+
+        console.log(response);
+        const imageBlob = await response.blob();
+        console.log(imageBlob);
+        const imageUrl = URL.createObjectURL(imageBlob);
+        img.setAttribute('src', imageUrl);
+    }
+
+</script>
+</body>
+</html>

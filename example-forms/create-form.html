@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Form</title>
+</head>
+<body>
+    <h1>Create Form</h1>
+    <br>
+    <form id="myForm" action="" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required>
+        
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author" required>
+        
+        <label for="publicationDate">Publication Date:</label>
+        <input type="text" id="publicationDate" name="publicationDate" required>
+        
+        <label for="genre">Genre:</label>
+        <input type="text" id="genre" name="genre" required>
+        
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required>
+        
+        <label for="posterImage">Poster Image:</label>
+        <input type="file" id="posterImageFile" name="posterImageFile" required>
+        
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+
+        // Your base URL
+        const baseUrl = 'http://localhost:8080/';
+
+        const form = document.getElementById('myForm');
+        
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            form.action = baseUrl + 'v1/books/create';
+            form.submit();
+        });
+    </script>
+    
+</body>
+</html>
+
