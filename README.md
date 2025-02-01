@@ -12,9 +12,8 @@ This is a simple library API for fetching book data from MongoDB on MongoDB Atla
 
 ## How to run this project on your PC
 
-1. Fork this project and pull it to your PC.
-2. Create a `.env` file to store your MongoDB credentials using the `.env.example` file provided. *(You will need a [MongoDB](https://www.mongodb.com/) database hosted on MongoDB Altas)*
-3. Run this project locally or in a Docker container
+1. Create a `.env` file to store your MongoDB credentials using the `.env.example` file provided. *(You will need a [MongoDB](https://www.mongodb.com/) database hosted on MongoDB Altas)*
+2. Run this project locally or in a Docker container
 
    ### Locally
 
@@ -49,6 +48,8 @@ This is a simple library API for fetching book data from MongoDB on MongoDB Atla
 
 ## API Endpoints
 
+Note: If you don't want to use `curl` to test the endpoints, you can use the example forms provided in the `example-forms` folder.
+
 Here are all the endpoints and their functionalities:
 
 1. **GET v1/books**
@@ -79,7 +80,9 @@ Here are all the endpoints and their functionalities:
             "posterImageBytes": "Poster Bytes Data",
             "posterImageUrl": "Poster URL"
         },
-        ...
+        {
+            "..."
+        }
     ]
     ```
 
@@ -271,6 +274,7 @@ A brief overview of the project structure here.
 I only include important files and folders:
 
 ```text
+/example-forms
 /src
   /main
     /java
@@ -290,6 +294,7 @@ I only include important files and folders:
 
 Explaination:
 
+- **example-forms folder**: contains example forms (to select, create, update, delete data) for testing the API.
 - **book folder**: feature-based folder structure contains the feature "Book" and its controller, service, and repository.
 - **config folder**: contains a configuration class for setting up CORS (Cross-Origin Resource Sharing) settings, allowing front-end to send requests this API.
 - **utils folder**: contains a controller class for error handling during API requests.
@@ -303,7 +308,7 @@ Explaination:
 
 ## Contribution, Improvements and More
 
-1. No contribution is accepted at this moment. but you can fork this project and make a pull request.
+1. No contribution is accepted at this moment. but you can use this project for free.
 
 2. There are some improvements that can be made in the future for this API project:
 
